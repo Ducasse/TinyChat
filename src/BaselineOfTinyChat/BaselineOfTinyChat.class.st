@@ -10,7 +10,7 @@ BaselineOfTinyChat >> baseline: spec [
 	<baseline>
 
 	spec for: #'common' do: [
-		spec project: 'Teapot' with: [
+		spec baseline: 'Teapot' with: [
 				spec repository: 'github://zeroflag/Teapot/source' ].
 		spec 
 			package: #'TinyChat' with: [
