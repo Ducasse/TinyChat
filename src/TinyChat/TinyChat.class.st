@@ -51,44 +51,52 @@ TinyChat class >> connect: aHost port: aPort login: aLogin [
 
 { #category : 'command' }
 TinyChat >> cmdLastMessageID [
+
 	^ self command: '/messages/count'
 ]
 
 { #category : 'command' }
 TinyChat >> cmdMessagesFromLastIndexToEnd [
 	"Returns the server messages from my current last index to the last one on the server."
+	
 	^ self command: ('/messages?id={1}' format: { lastMessageIndex asString })
 ]
 
 { #category : 'command' }
 TinyChat >> cmdNewMessage [
+
 	^self command: '/messages/add'
 ]
 
 { #category : 'command' }
 TinyChat >> command: aPath [
-	^'{1}{2}' format: { url . aPath }
+
+	^ '{1}{2}' format: { url . aPath }
 ]
 
 { #category : 'command' }
 TinyChat >> command: aPath argument: anArgument [
-	^'{1}{2}/{3}' format: { url . aPath . anArgument asString }
+
+	^ '{1}{2}/{3}' format: { url . aPath . anArgument asString }
 ]
 
 { #category : 'action' }
 TinyChat >> disconnect [
+
 	self sendNewMessage: (TCMessage from: login text: 'I exited from the chat room.').
 	exit := true 
 ]
 
 { #category : 'private' }
 TinyChat >> host: aHost port: aPort login: aLogin [
+
 	url := 'http://' , aHost , ':' , aPort asString.
 	login := aLogin
 ]
 
 { #category : 'initialization' }
 TinyChat >> initialize [
+
 	super initialize.
 	exit := false.
 	lastMessageIndex := 0.
@@ -97,21 +105,23 @@ TinyChat >> initialize [
 
 { #category : 'private' }
 TinyChat >> readLastMessageID [
+
 	| id |
 	id := (ZnClient new url: self cmdLastMessageID; get) asInteger.
-	id = 0 ifTrue: [  id := 1 ].
+	id = 0 ifTrue: [ id := 1 ].
 	^ id
 ]
 
 { #category : 'private' }
 TinyChat >> readMissingMessages [
 	"Gets the new messages that have been posted since the last request."
+	
 	| response receivedMessages |
 	response := (ZnClient new url: self cmdMessagesFromLastIndexToEnd; get).
 	^ response 
 		ifNil: [ 0 ]
 		ifNotNil: [  
-			receivedMessages := response subStrings: (String crlf).
+			receivedMessages := response substrings: (String crlf).
 			receivedMessages do: [ :msg | messages add: (TCMessage fromString: msg) ].
 			receivedMessages size.
 		].
@@ -137,17 +147,18 @@ TinyChat >> send: aString [
 	| msg |
 	msg := TCMessage from: login text: aString.
 	self sendNewMessage: msg.
-	lastMessageIndex := lastMessageIndex + (self readMissingMessages).
+	lastMessageIndex := lastMessageIndex + self readMissingMessages.
 	console print: messages.
 	
 ]
 
 { #category : 'private' }
 TinyChat >> sendNewMessage: aMessage [
+
 	^ ZnClient new
 		url: self cmdNewMessage;
-		formAt: 'sender' put:  (aMessage sender);
-		formAt: 'text' put: (aMessage text);
+		formAt: 'sender' put: aMessage sender;
+		formAt: 'text' put: aMessage text;
 		post
 ]
 

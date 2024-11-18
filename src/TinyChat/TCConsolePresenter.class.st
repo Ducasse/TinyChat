@@ -1,5 +1,7 @@
 "
+```
 (TinyChat connect: 'localhost' port: 8080 login: 'olivier' ) 
+```
 "
 Class {
 	#name : 'TCConsolePresenter',
@@ -18,22 +20,8 @@ Class {
 TCConsolePresenter class >> attach: aTinyChat [
 	| window |
 	window := self new chat: aTinyChat.
-	window openWithSpec whenClosedDo: [ aTinyChat disconnect ].
+	window open whenClosedDo: [ aTinyChat disconnect ].
 	^window
-]
-
-{ #category : 'initialize' }
-TCConsolePresenter class >> defaultSpec [
-	<spec: #default>
-    
-	^ SpecLayout composed
-		newColumn: [ :c | 
-			c
-				add: #list;
-				add: #input height: 30
-			];
-		yourself
-
 ]
 
 { #category : 'accessing' }
