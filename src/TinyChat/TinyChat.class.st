@@ -87,7 +87,7 @@ TinyChat >> host: aHost port: aPort login: aLogin [
 	login := aLogin
 ]
 
-{ #category : 'initialize-release' }
+{ #category : 'initialization' }
 TinyChat >> initialize [
 	super initialize.
 	exit := false.

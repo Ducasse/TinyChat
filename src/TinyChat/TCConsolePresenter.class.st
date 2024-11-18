@@ -45,8 +45,8 @@ TCConsolePresenter >> chat: anObject [
 TCConsolePresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
-			add: #list;
-			add: #input height;
+			add: list;
+			add: input;
 			yourself
 
 ]
